@@ -4,18 +4,28 @@
 
 @layer base {
   :root {
-    --background: 40 20% 98%;
-    --foreground: 0 0% 10%;
-    --muted: 40 10% 94%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 35 40% 50%;
-    --accent-foreground: 0 0% 100%;
-    --border: 40 10% 88%;
-    --ring: 35 40% 50%;
-    --primary: 0 0% 10%;
-    --primary-foreground: 0 0% 98%;
+    /* Warm parchment cream background */
+    --background: 42 38% 96%;
+    /* Near-black with a warm ink tint */
+    --foreground: 30 15% 12%;
+    /* Soft warm off-white for cards/muted areas */
+    --muted: 42 25% 91%;
+    --muted-foreground: 30 8% 48%;
+    /* Warm gold-brown accent */
+    --accent: 38 45% 44%;
+    --accent-foreground: 42 38% 96%;
+    /* Parchment border */
+    --border: 38 20% 84%;
+    --ring: 38 45% 44%;
+    /* Ink dark for primary buttons */
+    --primary: 30 18% 16%;
+    --primary-foreground: 42 38% 96%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
+
+    /* Sage green utility variable */
+    --sage: 96 18% 52%;
+    --sage-light: 96 20% 88%;
 
     /* Brand colors (dynamically injected from Store.metadata.brand) */
     /* Access in CSS: var(--brand-primary), var(--brand-secondary) */
@@ -23,16 +33,16 @@
   }
 
   .dark {
-    --background: 0 0% 6%;
-    --foreground: 40 20% 94%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 55%;
-    --accent: 35 45% 55%;
-    --accent-foreground: 0 0% 100%;
-    --border: 0 0% 16%;
-    --ring: 35 45% 55%;
-    --primary: 40 20% 94%;
-    --primary-foreground: 0 0% 6%;
+    --background: 30 12% 10%;
+    --foreground: 42 25% 90%;
+    --muted: 30 10% 16%;
+    --muted-foreground: 38 10% 58%;
+    --accent: 38 42% 52%;
+    --accent-foreground: 42 38% 96%;
+    --border: 30 10% 22%;
+    --ring: 38 42% 52%;
+    --primary: 42 25% 90%;
+    --primary-foreground: 30 12% 10%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
   }

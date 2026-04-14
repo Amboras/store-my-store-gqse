@@ -6,7 +6,6 @@ import { Search, ShoppingBag, User, Menu, X, LogIn } from 'lucide-react'
 import { useCart } from '@/hooks/use-cart'
 import { useAuth } from '@/hooks/use-auth'
 import CartDrawer from '@/components/cart/cart-drawer'
-import { useCollections } from '@/hooks/use-collections'
 
 export default function Header() {
   const { itemCount } = useCart()
@@ -14,7 +13,6 @@ export default function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const { data: collections } = useCollections()
 
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const mobileMenuCloseRef = useRef<HTMLButtonElement>(null)
@@ -25,14 +23,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Focus close button when mobile menu opens
   useEffect(() => {
     if (isMobileMenuOpen) {
       mobileMenuCloseRef.current?.focus()
     }
   }, [isMobileMenuOpen])
 
-  // Close mobile menu on Escape
   useEffect(() => {
     if (!isMobileMenuOpen) return
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -42,7 +38,6 @@ export default function Header() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isMobileMenuOpen])
 
-  // Focus trap for mobile menu
   const handleMobileMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key !== 'Tab' || !mobileMenuRef.current) return
     const focusable = mobileMenuRef.current.querySelectorAll<HTMLElement>(
@@ -60,17 +55,25 @@ export default function Header() {
     }
   }, [])
 
+  const navLinks = [
+    { label: 'All Prints', href: '/products' },
+    { label: 'Archive Maps', href: '/collections/archive-maps' },
+    { label: 'Illustrated Landmarks', href: '/collections/illustrated-landmarks' },
+    { label: 'About', href: '/about' },
+  ]
+
   return (
     <>
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           isScrolled
-            ? 'bg-background/95 backdrop-blur-md border-b shadow-sm'
-            : 'bg-background border-b'
+            ? 'bg-background/96 backdrop-blur-md border-b border-border/80 shadow-sm'
+            : 'bg-background border-b border-border/60'
         }`}
       >
         <div className="container-custom">
           <div className="flex h-16 items-center justify-between gap-4">
+
             {/* Mobile menu toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
@@ -81,25 +84,25 @@ export default function Header() {
             </button>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <span className="font-heading text-2xl font-semibold tracking-tight">
-                Store
+            <Link href="/" className="flex flex-col items-center lg:items-start">
+              <span className="font-heading text-xl lg:text-2xl font-semibold tracking-tight leading-tight text-foreground">
+                Fenland Press
+              </span>
+              <span className="hidden lg:block text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-body">
+                Heritage Maps &amp; Illustrations
               </span>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/products" className="text-sm tracking-wide uppercase link-underline py-1" prefetch={true}>
-                Shop All
-              </Link>
-              {collections?.slice(0, 4).map((collection: any) => (
+              {navLinks.map((link) => (
                 <Link
-                  key={collection.id}
-                  href={`/collections/${collection.handle}`}
-                  className="text-sm tracking-wide uppercase link-underline py-1"
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm tracking-wide font-body text-muted-foreground hover:text-foreground transition-colors link-underline py-1"
                   prefetch={true}
                 >
-                  {collection.title}
+                  {link.label}
                 </Link>
               ))}
             </nav>
@@ -108,26 +111,26 @@ export default function Header() {
             <div className="flex items-center gap-1">
               <Link
                 href="/search"
-                className="p-2.5 hover:opacity-70 transition-opacity"
+                className="p-2.5 hover:opacity-70 transition-opacity text-foreground/70 hover:text-foreground"
                 aria-label="Search"
               >
                 <Search className="h-5 w-5" />
               </Link>
               <Link
                 href={isLoggedIn ? '/account' : '/auth/login'}
-                className="p-2.5 hover:opacity-70 transition-opacity hidden sm:block"
+                className="p-2.5 hover:opacity-70 transition-opacity hidden sm:block text-foreground/70 hover:text-foreground"
                 aria-label={isLoggedIn ? 'Account' : 'Sign in'}
               >
                 {isLoggedIn ? <User className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
               </Link>
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2.5 hover:opacity-70 transition-opacity"
+                className="relative p-2.5 hover:opacity-70 transition-opacity text-foreground/70 hover:text-foreground"
                 aria-label="Shopping bag"
               >
                 <ShoppingBag className="h-5 w-5" />
                 {itemCount > 0 && (
-                  <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[10px] font-bold text-background">
+                  <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[hsl(30,18%,16%)] text-[10px] font-bold text-[hsl(42,38%,96%)]">
                     {itemCount}
                   </span>
                 )}
@@ -152,8 +155,11 @@ export default function Header() {
             onKeyDown={handleMobileMenuKeyDown}
             className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-background animate-slide-in-right"
           >
-            <div className="flex items-center justify-between p-4 border-b">
-              <span className="font-heading text-xl font-semibold">Menu</span>
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <div>
+                <span className="font-heading text-lg font-semibold text-foreground">Fenland Press</span>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-body mt-0.5">Heritage Maps &amp; Illustrations</p>
+              </div>
               <button
                 ref={mobileMenuCloseRef}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -163,43 +169,41 @@ export default function Header() {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <nav className="p-4 space-y-1">
-              <Link
-                href="/products"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 text-lg tracking-wide border-b border-border/50"
-                prefetch={true}
-              >
-                Shop All
-              </Link>
-              {collections?.map((collection: any) => (
+            <nav className="p-5 space-y-0.5">
+              {navLinks.map((link) => (
                 <Link
-                  key={collection.id}
-                  href={`/collections/${collection.handle}`}
+                  key={link.href}
+                  href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-lg tracking-wide border-b border-border/50"
+                  className="block py-3.5 font-body text-base text-foreground/80 hover:text-foreground border-b border-border/50 transition-colors"
                   prefetch={true}
                 >
-                  {collection.title}
+                  {link.label}
                 </Link>
               ))}
-              <div className="pt-4 space-y-1">
+              <div className="pt-6 space-y-1">
                 <Link
                   href={isLoggedIn ? '/account' : '/auth/login'}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-muted-foreground"
+                  className="block py-3 font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {isLoggedIn ? 'Account' : 'Sign In'}
+                  {isLoggedIn ? 'My Account' : 'Sign In'}
                 </Link>
                 <Link
                   href="/search"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-muted-foreground"
+                  className="block py-3 font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Search
                 </Link>
               </div>
             </nav>
+            {/* Tagline in mobile menu */}
+            <div className="absolute bottom-8 left-5 right-5">
+              <p className="font-heading italic text-sm text-muted-foreground/70 text-center">
+                &ldquo;The places you love, made permanent.&rdquo;
+              </p>
+            </div>
           </div>
         </div>
       )}
