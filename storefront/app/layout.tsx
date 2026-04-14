@@ -32,10 +32,19 @@ const body = Lora({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Fenland Press — Heritage Maps & English Illustrations',
+    default: 'Fenland Press — Vintage Map Prints and English Countryside Illustrations',
     template: '%s | Fenland Press',
   },
-  description: 'Archive maps, county surveys, and original watercolour illustrations of English landmarks. Printed on archival paper or delivered as instant digital downloads. Based in the Cambridgeshire Fens.',
+  description: 'Beautiful vintage maps and watercolour illustrations of English villages, churches, and countryside landmarks. Sourced from original archives and drawn from real photographs. Digital downloads and archival-quality prints. Based in the Cambridgeshire Fens.',
+  openGraph: {
+    type: 'website',
+    siteName: 'Fenland Press',
+    title: 'Fenland Press — Vintage Map Prints and English Countryside Illustrations',
+    description: 'Beautiful vintage maps and watercolour illustrations of English villages, churches, and countryside landmarks.',
+  },
+  other: {
+    'pinterest-rich-pin': 'true',
+  },
 }
 
 export default function RootLayout({

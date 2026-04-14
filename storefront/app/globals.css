@@ -4,46 +4,50 @@
 
 @layer base {
   :root {
-    /* Warm parchment cream background */
-    --background: 42 38% 96%;
-    /* Near-black with a warm ink tint */
-    --foreground: 30 15% 12%;
-    /* Soft warm off-white for cards/muted areas */
+    /* ── Brand palette: warm cream, sage, brown, gold ── */
+    --background: 42 38% 97%;
+    --foreground: 28 22% 12%;
     --muted: 42 25% 91%;
-    --muted-foreground: 30 8% 48%;
-    /* Warm gold-brown accent */
-    --accent: 38 45% 44%;
-    --accent-foreground: 42 38% 96%;
-    /* Parchment border */
-    --border: 38 20% 84%;
-    --ring: 38 45% 44%;
-    /* Ink dark for primary buttons */
-    --primary: 30 18% 16%;
-    --primary-foreground: 42 38% 96%;
-    --destructive: 0 72% 51%;
+    --muted-foreground: 30 10% 46%;
+    --accent: 37 42% 42%;
+    --accent-foreground: 42 38% 97%;
+    --border: 38 18% 84%;
+    --ring: 37 42% 42%;
+    --primary: 28 22% 16%;
+    --primary-foreground: 42 38% 97%;
+    --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Sage green utility variable */
-    --sage: 96 18% 52%;
-    --sage-light: 96 20% 88%;
+    /* Sage green */
+    --sage: 100 16% 48%;
+    --sage-light: 100 18% 88%;
+    --sage-muted: 100 14% 36%;
 
-    /* Brand colors (dynamically injected from Store.metadata.brand) */
-    /* Access in CSS: var(--brand-primary), var(--brand-secondary) */
-    /* Managed by BrandStyleInjector component */
+    /* Warm gold/brown */
+    --gold: 37 52% 48%;
+    --gold-light: 42 38% 88%;
+
+    /* Paper tones */
+    --paper: 42 35% 93%;
+    --paper-dark: 38 28% 86%;
+
+    /* Dark footer / hero overlay */
+    --ink: 28 22% 13%;
+    --ink-light: 28 16% 24%;
   }
 
   .dark {
-    --background: 30 12% 10%;
-    --foreground: 42 25% 90%;
-    --muted: 30 10% 16%;
-    --muted-foreground: 38 10% 58%;
-    --accent: 38 42% 52%;
-    --accent-foreground: 42 38% 96%;
-    --border: 30 10% 22%;
-    --ring: 38 42% 52%;
-    --primary: 42 25% 90%;
-    --primary-foreground: 30 12% 10%;
-    --destructive: 0 72% 51%;
+    --background: 28 16% 10%;
+    --foreground: 42 28% 88%;
+    --muted: 28 12% 16%;
+    --muted-foreground: 38 10% 56%;
+    --accent: 37 40% 52%;
+    --accent-foreground: 42 38% 97%;
+    --border: 28 10% 22%;
+    --ring: 37 40% 52%;
+    --primary: 42 28% 88%;
+    --primary-foreground: 28 16% 10%;
+    --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 98%;
   }
 }
@@ -51,94 +55,201 @@
 @layer base {
   * {
     border-color: hsl(var(--border));
+    box-sizing: border-box;
   }
 
   body {
     @apply bg-background text-foreground font-body antialiased;
+    line-height: 1.6;
+    font-size: 16px;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
+    line-height: 1.2;
+  }
+
+  /* Minimum font-size guardrails */
+  p, li, td, th, label, input, textarea, select {
+    font-size: max(14px, 0.875rem);
+  }
+
+  /* Smooth image rendering */
+  img {
+    @apply rounded-sm;
+  }
+
+  /* Global focus ring — brand-coloured */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 }
 
 @layer utilities {
+  /* Layout */
   .container-custom {
     @apply mx-auto max-w-content px-4 sm:px-6 lg:px-8;
   }
 
+  /* Typography helpers */
   .text-balance {
     text-wrap: balance;
   }
 
+  /* Animated underline link */
   .link-underline {
     @apply relative;
   }
   .link-underline::after {
     content: '';
-    @apply absolute bottom-0 left-0 h-px w-0 bg-foreground transition-all duration-300;
+    @apply absolute bottom-0 left-0 h-px w-0 bg-current transition-all duration-300 ease-out;
   }
   .link-underline:hover::after {
     @apply w-full;
   }
 
-  /* Brand color utilities - uses colors from Store.metadata.brand */
+  /* Product card hover zoom */
+  .img-zoom {
+    @apply overflow-hidden;
+  }
+  .img-zoom img {
+    @apply transition-transform duration-300 ease-out;
+  }
+  .img-zoom:hover img {
+    transform: scale(1.04);
+  }
+
+  /* Skeleton shimmer */
+  .skeleton {
+    @apply bg-muted relative overflow-hidden;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--background) / 0.6) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.6s infinite;
+  }
+
+  /* Brand colour helpers */
   .btn-brand-primary {
     background-color: var(--brand-primary, hsl(var(--primary)));
-    color: white;
+    color: hsl(var(--primary-foreground));
   }
-  .btn-brand-primary:hover {
-    opacity: 0.9;
+  .btn-brand-primary:hover { opacity: 0.88; }
+
+  .text-brand-primary  { color: var(--brand-primary, hsl(var(--primary))); }
+  .text-brand-secondary{ color: var(--brand-secondary, hsl(var(--accent))); }
+  .border-brand-primary{ border-color: var(--brand-primary, hsl(var(--border))); }
+  .bg-brand-primary    { background-color: var(--brand-primary, hsl(var(--primary))); }
+  .bg-brand-secondary  { background-color: var(--brand-secondary, hsl(var(--accent))); }
+
+  /* "New" badge */
+  .badge-new {
+    @apply absolute top-2.5 left-2.5 z-10 bg-accent text-accent-foreground text-[10px] font-body uppercase tracking-[0.18em] px-2.5 py-1 rounded-[2px];
   }
 
-  .text-brand-primary {
-    color: var(--brand-primary, hsl(var(--primary)));
+  /* Warm button (add to basket) */
+  .btn-warm {
+    @apply bg-[hsl(37,42%,42%)] text-[hsl(42,38%,97%)] hover:bg-[hsl(37,42%,36%)] transition-colors;
   }
 
-  .text-brand-secondary {
-    color: var(--brand-secondary, hsl(var(--accent)));
+  /* Paper section */
+  .bg-paper {
+    background-color: hsl(var(--paper));
   }
-
-  .border-brand-primary {
-    border-color: var(--brand-primary, hsl(var(--border)));
+  .bg-paper-dark {
+    background-color: hsl(var(--paper-dark));
   }
-
-  .bg-brand-primary {
-    background-color: var(--brand-primary, hsl(var(--primary)));
+  .bg-ink {
+    background-color: hsl(var(--ink));
   }
-
-  .bg-brand-secondary {
-    background-color: var(--brand-secondary, hsl(var(--accent)));
+  .text-ink {
+    color: hsl(var(--ink));
   }
 }
 
-/* Smooth scrolling */
+/* ── Keyframes ────────────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes slide-out-right {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+@keyframes heart-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(100%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Animation classes ───────────────────────────────────── */
+.animate-fade-in       { animation: fade-in 0.35s ease-out; }
+.animate-fade-in-up    { animation: fade-in-up 0.5s ease-out; }
+.animate-slide-in-right{ animation: slide-in-right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.animate-slide-out-right{ animation: slide-out-right 0.25s ease-in; }
+.animate-slide-down    { animation: slide-down 0.25s ease-out; }
+.animate-scale-in      { animation: scale-in 0.2s ease-out; }
+.animate-heart-pop     { animation: heart-pop 0.35s ease-out; }
+.animate-toast-in      { animation: toast-in 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+/* Scroll behaviour */
 html {
   scroll-behavior: smooth;
 }
 
-/* Selection color */
+/* Text selection */
 ::selection {
-  @apply bg-accent/20 text-foreground;
+  background: hsl(var(--accent) / 0.18);
+  color: hsl(var(--foreground));
 }
 
-/* Focus styles */
-:focus-visible {
-  @apply outline-2 outline-offset-2 outline-ring;
+/* Skip-to-content link (accessibility) */
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:border focus:border-border focus:rounded;
 }
 
-/* Cookie consent animation */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(1rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
+/* Page transition wrapper */
+.page-transition {
+  animation: fade-in 0.2s ease-out;
 }
